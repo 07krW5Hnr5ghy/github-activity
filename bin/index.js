@@ -58,7 +58,7 @@ const main = () => {
                 for(eventData of JSON.parse(data)){
                     switch (eventData.type){
                         case EVENTTYPES.COMMIT_COMMENT:
-                            console.log(`- Created commit comment in ${eventData.repo.name}`);
+                            console.log(`- Created comment for commit ${eventData.payload.comment.sha} in repository ${eventData.repo.name} by ${eventData.payload.comment.author.login}`);
                             break;
                         case EVENTTYPES.CREATE:
                             console.log(`- Created repository ${eventData.repo.name}`);
@@ -70,7 +70,7 @@ const main = () => {
                             console.log(`- Fork repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.GOLLUM:
-                            console.log(`- Wiki created for repository ${eventData.repo.name}`);
+                            console.log(`- Wiki created or updated for repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.ISSUE_COMMENT:
                             console.log(`- ${capitalize(eventData.payload.action)} comment for issue #${eventData.payload.issue.number} in repository ${eventData.repo.name}`);
@@ -79,7 +79,7 @@ const main = () => {
                             console.log(`- ${capitalize(eventData.payload.action)} issue #${eventData.payload.issue.number} for repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.MEMBER:
-                            console.log(`- ${capitalize(eventData.payload.member)} added in repository ${eventData.repo.name}`);
+                            console.log(`- User ${eventData.payload.member.login} added as collaborator in repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.PUBLIC:
                             console.log(`- Repository ${eventData.repo.name} became public`);
@@ -91,19 +91,19 @@ const main = () => {
                             console.log(`- Review ${eventData.payload.action} for pull request #${eventData.payload.pull_request.number} in repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.PULL_REQUEST_REVIEW_COMMENT:
-                            console.log(`- Comment ${eventData.payload.action} for pull request #${eventData.payload.pull_request} in repository ${eventData.repo.name}`);
+                            console.log(`- Comment ${eventData.payload.action} for pull request #${eventData.payload.pull_request.number} in repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.PULL_REQUEST_REVIEW_THREAD:
-                            console.log(`- Thread marked ${eventData.payload.action} for pull request #${eventData.payload.pull_request} in repository ${eventData.repo.name}`);
+                            console.log(`- Thread marked ${eventData.payload.action} for pull request #${eventData.payload.pull_request.number} in repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.PUSH:
                             console.log(`- Pushed ${eventData.payload.commits.length} commits in repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.RELEASE:
-                            console.log(`- Release ${eventData.payload.action} for repository ${eventData.repo.name}`);
+                            console.log(`- Release ${eventData.payload.release.name} ${eventData.payload.action} for repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.SPONSORSHIP:
-                            console.log(`- Sponsorship for ${eventData.payload.action} for repository ${eventData.repo.name}`);
+                            console.log(`- Sponsorship ${eventData.payload.action} for repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.WATCH:
                             console.log(`- Started watching repository ${eventData.repo.name}`);
