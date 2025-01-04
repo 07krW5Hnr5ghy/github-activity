@@ -49,10 +49,59 @@ const main = () => {
                 console.log('Retrieved all data');
                 //console.log(JSON.parse(data));
                 for(eventData of JSON.parse(data)){
-                    console.log(eventData);
                     switch (eventData.type){
                         case EVENTTYPES.COMMIT_COMMENT:
-                            console.log() 
+                            console.log(`- Created commit comment in ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.CREATE:
+                            console.log(`- Created repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.DELETE:
+                            console.log(`- Deleted ${eventData.payload.ref_type} ${eventData.payload.ref} repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.FORK:
+                            console.log(`- Fork repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.GOLLUM:
+                            console.log(`- Wiki created for repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.ISSUE_COMMENT:
+                            console.log(`- ${eventData.payload.action} comment in ${eventData.payload.issue} issue for repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.ISSUES:
+                            console.log(`- ${eventData.payload.action} ${eventData.payload.issue} #${eventData.payload.number} issue for repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.MEMBER:
+                            console.log(`- ${eventData.payload.member} added in repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.PUBLIC:
+                            console.log(`- Repository ${eventData.repo.name} became public`);
+                            break;
+                        case EVENTTYPES.PULL_REQUEST:
+                            console.log(`- Pull request ${eventData.payload.action} #${eventData.payload.number} in repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.PULL_REQUEST_REVIEW:
+                            console.log(`- Review ${eventData.payload.action} for pull request #${eventData.payload.number} in repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.PULL_REQUEST_REVIEW_COMMENT:
+                            console.log(`- Comment ${eventData.payload.action} for pull request #${eventData.payload.pull_request} in repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.PULL_REQUEST_REVIEW_THREAD:
+                            console.log(`- Thread marked ${eventData.payload.action} for pull request #${eventData.payload.pull_request} in repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.PUSH:
+                            console.log(`- Pushed ${eventData.payload.commits.length} commits in repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.RELEASE:
+                            console.log(`- Release ${eventData.payload.action} for repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.SPONSORSHIP:
+                            console.log(`- Sponsorship for ${eventData.payload.action} for repository ${eventData.repo.name}`);
+                            break;
+                        case EVENTTYPES.WATCH:
+                            console.log(`- Started watching repository ${eventData.repo.name}`);
+                        default:
+                            console.log("Event type not supported.");
                     }
                 }
             });
