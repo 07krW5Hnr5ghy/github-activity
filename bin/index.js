@@ -19,6 +19,10 @@ const EVENTTYPES = {
     SPONSORSHIP:'SponsorshipEvent',
     WATCH:'WatchEvent',
 };
+// helper function
+function capitalize(value){
+    return String(value).charAt(0).toUpperCase() + String(value).slice(1);
+}
 // CLI handle
 const main = () => {
     const [,,username] = process.argv;
@@ -34,7 +38,11 @@ const main = () => {
         };
         let request = https.request(options,(res)=>{
             if(res.statusCode!==200){
-                console.error(`Did not get an OK from the server. Code: ${res.statusCode}`);
+                if(res.statusCode===404){
+                    console.log(`User ${username} not found. Code: ${res.statusCode}`);
+                }else{
+                    console.error(`Error fetching ${username} activity data. Code: ${res.statusCode}`);
+                }
                 res.resume();
                 return;
             }
@@ -47,7 +55,6 @@ const main = () => {
 
             res.on('close',()=>{
                 console.log('Retrieved all data');
-                //console.log(JSON.parse(data));
                 for(eventData of JSON.parse(data)){
                     switch (eventData.type){
                         case EVENTTYPES.COMMIT_COMMENT:
@@ -66,22 +73,22 @@ const main = () => {
                             console.log(`- Wiki created for repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.ISSUE_COMMENT:
-                            console.log(`- ${eventData.payload.action} comment in ${eventData.payload.issue} issue for repository ${eventData.repo.name}`);
+                            console.log(`- ${capitalize(eventData.payload.action)} comment for issue #${eventData.payload.issue.number} in repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.ISSUES:
-                            console.log(`- ${eventData.payload.action} ${eventData.payload.issue} #${eventData.payload.number} issue for repository ${eventData.repo.name}`);
+                            console.log(`- ${capitalize(eventData.payload.action)} issue #${eventData.payload.issue.number} for repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.MEMBER:
-                            console.log(`- ${eventData.payload.member} added in repository ${eventData.repo.name}`);
+                            console.log(`- ${capitalize(eventData.payload.member)} added in repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.PUBLIC:
                             console.log(`- Repository ${eventData.repo.name} became public`);
                             break;
                         case EVENTTYPES.PULL_REQUEST:
-                            console.log(`- Pull request ${eventData.payload.action} #${eventData.payload.number} in repository ${eventData.repo.name}`);
+                            console.log(`- Pull request #${eventData.payload.number} ${eventData.payload.action} in repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.PULL_REQUEST_REVIEW:
-                            console.log(`- Review ${eventData.payload.action} for pull request #${eventData.payload.number} in repository ${eventData.repo.name}`);
+                            console.log(`- Review ${eventData.payload.action} for pull request #${eventData.payload.pull_request.number} in repository ${eventData.repo.name}`);
                             break;
                         case EVENTTYPES.PULL_REQUEST_REVIEW_COMMENT:
                             console.log(`- Comment ${eventData.payload.action} for pull request #${eventData.payload.pull_request} in repository ${eventData.repo.name}`);
@@ -100,6 +107,7 @@ const main = () => {
                             break;
                         case EVENTTYPES.WATCH:
                             console.log(`- Started watching repository ${eventData.repo.name}`);
+                            break;
                         default:
                             console.log("Event type not supported.");
                     }
