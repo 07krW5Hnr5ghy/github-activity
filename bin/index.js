@@ -1,5 +1,24 @@
 #!/usr/bin/env node
 const https = require('https');
+const EVENTTYPES = {
+    COMMIT_COMMENT:'CommitCommentEvent',
+    CREATE:'CreateEvent',
+    DELETE:'DeleteEvent',
+    FORK:'ForkEvent',
+    GOLLUM:'GollumEvent',
+    ISSUE_COMMENT:'IssueCommentEvent',
+    ISSUES:'IssuesEvent',
+    MEMBER:'MemberEvent',
+    PUBLIC:'PublicEvent',
+    PULL_REQUEST:'PullRequestEvent',
+    PULL_REQUEST_REVIEW:'PullRequestReviewEvent',
+    PULL_REQUEST_REVIEW_COMMENT:'PullRequestReviewCommentEvent',
+    PULL_REQUEST_REVIEW_THREAD:'PullRequestReviewThreadEvent',
+    PUSH:'PushEvent',
+    RELEASE:'ReleaseEvent',
+    SPONSORSHIP:'SponsorshipEvent',
+    WATCH:'WatchEvent',
+};
 // CLI handle
 const main = () => {
     const [,,username] = process.argv;
@@ -28,7 +47,14 @@ const main = () => {
 
             res.on('close',()=>{
                 console.log('Retrieved all data');
-                console.log(JSON.parse(data));
+                //console.log(JSON.parse(data));
+                for(eventData of JSON.parse(data)){
+                    console.log(eventData);
+                    switch (eventData.type){
+                        case EVENTTYPES.COMMIT_COMMENT:
+                            console.log() 
+                    }
+                }
             });
         });
         request.end();
